@@ -18,7 +18,6 @@ class FabricConnection {
   }
 
   loadConnectionProfile() {
-    // Connection profile for Hyperledger Fabric network
     return {
       name: 'herbionyx-network',
       version: '1.0.0',
@@ -177,7 +176,6 @@ BKfUei9QVL812XFjC1+MOCK+CERTIFICATE+DATA+HERE+FOR+DEMO+PURPOSES
         return true;
       }
 
-      // Mock admin enrollment for demo
       const adminIdentity = {
         credentials: {
           certificate: this.getMockCert(),
@@ -243,7 +241,6 @@ BKfUei9QVL812XFjC1+MOCK+CERTIFICATE+DATA+HERE+FOR+DEMO+PURPOSES
       console.log(`📤 Submitting transaction: ${functionName}`, args);
       const result = await this.contract.submitTransaction(functionName, ...args);
       
-      // Get transaction details
       const transaction = this.contract.createTransaction(functionName);
       const txId = transaction.getTransactionId();
       
@@ -253,7 +250,7 @@ BKfUei9QVL812XFjC1+MOCK+CERTIFICATE+DATA+HERE+FOR+DEMO+PURPOSES
         success: true,
         result: result.toString(),
         transactionId: txId,
-        blockNumber: Math.floor(Math.random() * 1000) + 1000, // Mock block number
+        blockNumber: Math.floor(Math.random() * 1000) + 1000,
         timestamp: new Date().toISOString()
       };
     } catch (error) {
@@ -284,14 +281,12 @@ BKfUei9QVL812XFjC1+MOCK+CERTIFICATE+DATA+HERE+FOR+DEMO+PURPOSES
     }
   }
 
-  // Mock methods for when Fabric network is not available
   async mockSubmitTransaction(functionName, ...args) {
     console.log(`🔄 Mock transaction: ${functionName}`, args);
     
     const txId = `mock_tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const blockNumber = Math.floor(Math.random() * 1000) + 1000;
     
-    // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 500));
     
     return {
@@ -307,10 +302,8 @@ BKfUei9QVL812XFjC1+MOCK+CERTIFICATE+DATA+HERE+FOR+DEMO+PURPOSES
   async mockEvaluateTransaction(functionName, ...args) {
     console.log(`🔄 Mock query: ${functionName}`, args);
     
-    // Simulate network delay
     await new Promise(resolve => setTimeout(resolve, 300));
     
-    // Return realistic mock data based on function
     let mockData = {};
     
     switch (functionName) {
@@ -360,6 +353,8 @@ BKfUei9QVL812XFjC1+MOCK+CERTIFICATE+DATA+HERE+FOR+DEMO+PURPOSES
             moisture: 8.5,
             pesticides: 0.005,
             heavyMetals: 2.1,
+            passed: true
+          },
           herbName: 'Ashwagandha',
           farmerID: 'FARMER_001',
           processorID: 'PROC_001',
@@ -369,12 +364,6 @@ BKfUei9QVL812XFjC1+MOCK+CERTIFICATE+DATA+HERE+FOR+DEMO+PURPOSES
             address: 'Rajasthan, India'
           },
           timestamp: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-          qualityTests: {
-            moisture: 8.5,
-            pesticides: 0.005,
-            heavyMetals: 2.1,
-            passed: true
-          },
           processing: {
             method: 'Drying',
             temperature: 60,
@@ -404,7 +393,6 @@ BKfUei9QVL812XFjC1+MOCK+CERTIFICATE+DATA+HERE+FOR+DEMO+PURPOSES
 
   async isNetworkAvailable() {
     try {
-      // Check if Docker containers are running
       const { exec } = await import('child_process');
       return new Promise((resolve) => {
         exec('docker ps --filter "name=peer0.farmers.herbionyx.com" --format "{{.Names}}"', (error, stdout) => {

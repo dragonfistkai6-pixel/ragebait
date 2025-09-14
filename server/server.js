@@ -12,7 +12,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
@@ -103,7 +103,6 @@ let finalBatches = [];
 // Real services
 const realServices = {
   uploadToIPFS: async (file) => {
-    // Real IPFS upload would go here
     const mockHash = 'Qm' + Math.random().toString(36).substr(2, 44);
     return {
       hash: mockHash,
@@ -166,11 +165,9 @@ app.post('/api/auth/login', (req, res) => {
   const trimmedUsername = String(username).trim();
   const trimmedPassword = String(rawPassword).trim();
   
-  // Find existing user or create new one
   let user = users.find(u => u.username === trimmedUsername);
   
   if (!user) {
-    // Create new user account
     const newUser = {
       id: `${role.toLowerCase()}_${Date.now()}`,
       username: trimmedUsername,
@@ -187,12 +184,10 @@ app.post('/api/auth/login', (req, res) => {
     user = newUser;
     console.log('Created new user:', user.username, 'as', user.role);
   } else {
-    // Verify password for existing user
     if (user.password !== trimmedPassword) {
       return res.status(401).json({ error: 'Invalid password' });
     }
     
-    // Update role if different
     if (user.role !== role) {
       user.role = role;
       user.organization = getOrganizationByRole(role);
@@ -600,6 +595,7 @@ function getRandomLocation() {
     source: 'gps'
   };
 }
+
 // Role-specific data endpoints
 app.get('/api/collector/batches', (req, res) => {
   const mockBatches = [
@@ -719,7 +715,6 @@ app.get('*', (req, res) => {
   if (fs.existsSync(indexPath)) {
     res.sendFile(indexPath);
   } else {
-    // Fallback HTML for development
     res.send(`
       <!DOCTYPE html>
       <html lang="en">
